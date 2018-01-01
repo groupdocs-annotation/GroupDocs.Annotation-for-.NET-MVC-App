@@ -8,12 +8,13 @@ using System.Web.Security;
 using System.Web.SessionState;
 using System.Web.Http;
 using GroupDocs.Annotation;
+using GroupDocs.Annotation.Common.License;
 
 namespace GroupDocs.Annotation_for.NET
 {
     public class Global : HttpApplication
     {
-        private static string _licensePath = "E:\\GroupDocs\\Licenses\\GroupDocs.Total.lic";
+        private static string _licensePath = "E:\\GroupDocs.Total.lic";
         void Application_Start(object sender, EventArgs e)
         {
             // Code that runs on application startup
