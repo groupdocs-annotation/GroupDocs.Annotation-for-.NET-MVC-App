@@ -139,34 +139,15 @@
     <Content Include="App_Data\Storage\Test - Copy.pdf" />
     <Content Include="App_Data\Storage\candy.pdf" />
     <None Include="Views\Home\index2.cshtml" />
-    <Content Include="js\app.config.js" />
-    <Content Include="js\app.controller.pageCanvas.js" />
-    <Content Include="js\app.controller.thread.js" />
-    <Content Include="js\app.controller.tools.js" />
-    <Content Include="js\app.directive.gdxAnnoPage.js" />
-    <Content Include="js\app.factory.annotation.js" />
-    <Content Include="js\app.factory.replies.js" />
-    <Content Include="js\app.factory.reply.js" />
-    <Content Include="js\app.js" />
-    <Content Include="css\style.css" />
+    <Content Include="js\*.js" />
+    <Content Include="css\*.css" />
     <None Include="Views\Home\index.cshtml" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Controllers\AddAnnotationController.cs" />
-    <Compile Include="Controllers\AnnotationController.cs" />
-    <Compile Include="Controllers\DeleteAnnotationController.cs" />
-    <Compile Include="Controllers\DocumentInfoController.cs" />
-    <Compile Include="Controllers\DownloadAnnotatedController.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\ListAnnotationsController.cs" />
-    <Compile Include="Controllers\PageCountController.cs" />
-    <Compile Include="Controllers\PageImageController.cs" />
-    <Compile Include="Controllers\PageTextController.cs" />
-    <Compile Include="Controllers\RepliesController.cs" />
-    <Compile Include="Controllers\ReplyController.cs" />
+    <Compile Include="Controllers\*.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -236,3 +217,5 @@
   </Target>
   -->
 </Project>
+
+

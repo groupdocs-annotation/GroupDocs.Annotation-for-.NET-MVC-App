@@ -22,8 +22,8 @@ namespace GroupDocs.Annotation_for.NET.Controllers
 
             ImageOptions o = new ImageOptions();
             int pageNumber = int.Parse(Request.Params["page"]);
-            o.PageNumbersToConvert = new List<int>(pageNumber - 1);
-            o.PageNumber = pageNumber - 1;
+            o.PageNumbersToConvert = new List<int>(pageNumber);
+            o.PageNumber = pageNumber;
             o.CountPagesToConvert = 1;
             if (!string.IsNullOrEmpty(Request.Params["width"]))
             {
@@ -36,7 +36,7 @@ namespace GroupDocs.Annotation_for.NET.Controllers
 
             Stream stream = null;
             List<PageImage> list = handler.GetPages(file, o);
-            foreach (PageImage pageImage in list.Where(x => x.PageNumber == pageNumber - 1))
+            foreach (PageImage pageImage in list.Where(x => x.PageNumber == pageNumber))
             {
                 stream = pageImage.Stream;
             };
@@ -53,3 +53,4 @@ namespace GroupDocs.Annotation_for.NET.Controllers
         }
     }
 }
+

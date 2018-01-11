@@ -114,6 +114,40 @@
                     currentObject.fillColor = 'black';
                     currentObject.strokeWidth = 2;
                     break;
+                case 'underline':
+                    var start = new ps.Point(event.point);
+                    $rootScope.startRow = getStartRow($rootScope.docInfo, start, attrs);
+                    $rootScope.startText = $rootScope.startRow[0].characterCoordinates.filter(x => Math.floor(x) > Math.floor(start.x)
+                )
+                    ;
+                    if ($rootScope.startText.length > 1) {
+                        currentObject = new ps.Path.Line(new ps.Point($rootScope.startText[0], $rootScope.startRow[0].lineTop + $rootScope.startRow[0].lineHeight), new ps.Point($rootScope.startText[1], $rootScope.startRow[0].lineTop + $rootScope.startRow[0].lineHeight));
+                        currentObject.strokeColor = 'black';
+                        currentObject.strokeWidth = 2;
+                    }
+                    else if ($rootScope.startText.length > 1) {
+                        currentObject = new ps.Path.Line(new ps.Point($rootScope.startText[0], $rootScope.startRow[0].lineTop + $rootScope.startRow[0].lineHeight), new ps.Point($rootScope.startText[0], $rootScope.startRow[0].lineTop + $rootScope.startRow[0].lineHeight));
+                        currentObject.strokeColor = 'black';
+                        currentObject.strokeWidth = 2;
+                    }
+                    break;
+                case 'strikeout':
+                    var start = new ps.Point(event.point);
+                    $rootScope.startRow = getStartRow($rootScope.docInfo, start, attrs);
+                    $rootScope.startText = $rootScope.startRow[0].characterCoordinates.filter(x => Math.floor(x) > Math.floor(start.x)
+                )
+                    ;
+                    if ($rootScope.startText.length > 1) {
+                        currentObject = new ps.Path.Line(new ps.Point($rootScope.startText[0], $rootScope.startRow[0].lineTop + $rootScope.startRow[0].lineHeight / 2), new ps.Point($rootScope.startText[1], $rootScope.startRow[0].lineTop + $rootScope.startRow[0].lineHeight / 2));
+                        currentObject.strokeColor = 'black';
+                        currentObject.strokeWidth = 2;
+                    }
+                    else if ($rootScope.startText.length > 1) {
+                        currentObject = new ps.Path.Line(new ps.Point($rootScope.startText[0], $rootScope.startRow[0].lineTop + $rootScope.startRow[0].lineHeight / 2), new ps.Point($rootScope.startText[0], $rootScope.startRow[0].lineTop + $rootScope.startRow[0].lineHeight / 2));
+                        currentObject.strokeColor = 'black';
+                        currentObject.strokeWidth = 2;
+                    }
+                    break;
             }
         };
 
@@ -141,6 +175,35 @@
                     currentObject.position.x += event.delta.x;
                     currentObject.position.y += event.delta.y;
                     break;
+                case 'underline':
+                    if (currentObject) {
+                        var end = new ps.Point(event.point);
+                        var endText = $rootScope.startRow[0].characterCoordinates.filter(x => Math.floor(x) > Math.floor(end.x)
+                    )
+                        ;
+                        if (endText.length > 1) {
+                            currentObject.add(new ps.Point(endText[1], $rootScope.startRow[0].lineTop + $rootScope.startRow[0].lineHeight));
+                        }
+                        else if (endText.length > 0) {
+                            currentObject.add(new ps.Point(endText[0], $rootScope.startRow[0].lineTop + $rootScope.startRow[0].lineHeight));
+                        }
+                    }
+                    break;
+                case 'strikeout':
+                    if (currentObject) {
+                        var end = new ps.Point(event.point);
+                        var endText = $rootScope.startRow[0].characterCoordinates.filter(x => Math.floor(x) > Math.floor(end.x)
+                    )
+                        ;
+                        if (endText.length > 1) {
+                            currentObject.add(new ps.Point(endText[1], $rootScope.startRow[0].lineTop + $rootScope.startRow[0].lineHeight / 2));
+                        }
+                        else if (endText.length > 0) {
+                            currentObject.add(new ps.Point(endText[0], $rootScope.startRow[0].lineTop + $rootScope.startRow[0].lineHeight / 2));
+                        }
+
+                    }
+                    break;
                 case 'arrow':
                     if (currentObject) {
                         currentObject.remove();
@@ -162,6 +225,40 @@
                     ]);
                     currentObject.strokeColor = 'black';
                     currentObject.strokeWidth = 2;
+                    break;
+                case 'distance':
+                    if (currentObject) {
+                        currentObject.remove();
+                    }
+                    var start = new ps.Point(event.downPoint);
+                    var end = new ps.Point(event.point);
+                    var textX = (start.x + end.x) / 2;
+                    var textY = (start.y + end.y) / 2;
+                    var textPoint = new ps.Point(textX, textY);
+                    var tailLine = new ps.Path.Line(start, end);
+                    var textPosition = end.add(start);
+                    var tailVector = end.subtract(start);
+                    var headLine = tailVector.normalize(10);
+                    var tailArrow = tailVector.normalize(-10);
+                    currentObject = new ps.Group([
+                        new ps.Path([start, end]),
+                        new ps.Path([
+                            end.add(headLine.rotate(150)),
+                            end,
+                            end.add(headLine.rotate(-150))
+                        ]),
+                        new ps.Path([
+                            start.add(tailArrow.rotate(-150)),
+                            start,
+                            start.add(tailArrow.rotate(150))
+                        ]),
+                        new ps.PointText(textPoint)
+                    ]);
+
+                    currentObject.strokeColor = 'black';
+                    currentObject.strokeWidth = 2;
+                    currentObject._children[3].content = Math.floor(currentObject._children[0].length) + " px";
+                    currentObject._children[3].strokeWidth = 0.5;
                     break;
             }
         };
@@ -214,11 +311,54 @@
                     ant.svgPath = currentObject.exportSVG().firstChild.getAttribute('d');
                     ant.svgPath += " " + currentObject.exportSVG().lastChild.getAttribute('d');
                     break;
+                case 'distance':
+                    ant = {
+                        type: 12,
+                        svgPath: currentObject.exportSVG().children[0].getAttribute('d') + " " + currentObject.exportSVG().children[1].getAttribute('d') + " " + currentObject.exportSVG().children[2].getAttribute('d'),
+                        text: currentObject.children[3].content,
+                        box: {
+                            x: currentObject.children[3].position.x,
+                            y: currentObject.children[3].position.y,
+                            width: 0,
+                            height: 0
+                        }
+                    };
+                    break;
+                case 'underline':
+                    ant = {
+                        type: 11,
+                        svgPath: currentObject.exportSVG().getAttribute('d'),
+                        box: {
+                            x: currentObject.bounds.x,
+                            y: currentObject.bounds.y,
+                            width: 0,
+                            height: 0
+                        },
+                    };
+                    break;
+                case 'strikeout':
+                    ant = {
+                        type: 11,
+                        svgPath: currentObject.exportSVG().getAttribute('d'),
+                        box: {
+                            x: currentObject.bounds.x,
+                            y: currentObject.bounds.y,
+                            width: 0,
+                            height: 0
+                        },
+                    };
+                    break;
             }
 
             if (ant.type) {
-                ant.pageNumber = attrs.number;
-                AnnotationAddFactory.save(ant, function (response) {
+                ant = angular.merge({}, ant, {
+                    penColor: 0x010101,
+                    penStyle: 1,
+                    penWidth: 2,
+                    pageNumber: attrs.number
+                });
+                var a = new AnnotationAddFactory(ant);
+                a.$save({filename: $rootScope.selectedFile}, function (response) {
                     currentObject.name = response.guid;
                     currentObject.selected = true;
                     currentObject = null;
@@ -309,8 +449,55 @@
                     arrow.strokeWidth = 2;
                     arrow.name = item.annotation.guid;
                     break;
+                case 11:
+                    var line = new ps.Path();
+                    line.pathData = item.annotation.svgPath;
+                    line.strokeColor = 'black';
+                    line.strokeWidth = 2;
+                    line.name = item.annotation.guid;
+                    break;
+                case 3:
+                    var line = new ps.Path();
+                    line.pathData = item.annotation.svgPath;
+                    line.strokeColor = 'black';
+                    line.strokeWidth = 2;
+                    line.name = item.annotation.guid;
+                    break;
+                case 12:
+                    var distance = new ps.Group([
+                        new ps.Path(item.annotation.svgPath.split(" ")[0]),
+                        new ps.Path(item.annotation.svgPath.split(" ")[1]),
+                        new ps.Path(item.annotation.svgPath.split(" ")[2]),
+                        new ps.PointText(new ps.Point(item.annotation.box.x, item.annotation.box.y))
+                    ]);
+                    distance.strokeColor = 'black';
+                    distance.strokeWidth = 2;
+                    distance.children[3].content = Math.floor(distance.children[0].length) + " px";
+                    distance.children[3].strokeWidth = 0.5;
+                    distance.name = item.annotation.guid;
+                    break;
             }
         })
+    }
+
+    function getStartRow(docInfo, start, attrs) {
+        var startRow = [];
+        for (var i = 0; i < 30; i++) {
+            startRow = docInfo.pages[attrs.number].rows.filter(x => Math.floor(x.lineTop) == (Math.floor(start.y) - i )
+        )
+            ;
+            if (startRow.length > 0)
+                return startRow;
+        }
+        if (startRow.length == 0)
+            for (var i = 0; i < 30; i++) {
+                startRow = docInfo.pages[attrs.number].rows.filter(x => Math.floor(x.lineTop) == (Math.floor(start.y) + i )
+            )
+                ;
+                if (startRow.length > 0)
+                    return startRow;
+            }
+
     }
 
     function setupAnnotationDeletion($rootScope, AnnotationFactory, scope, element, attrs) {
