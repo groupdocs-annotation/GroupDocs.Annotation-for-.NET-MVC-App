@@ -1,14 +1,5 @@
-﻿using GroupDocs.Annotation.Domain;
-using GroupDocs.Annotation.Domain.Results;
-using GroupDocs.Annotation.Handler;
-using GroupDocs.Annotation.Handler.Input.DataObjects;
-using GroupDocs.Annotation_for.NET.Models;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.IO;
+using System.Collections;
 using System.Web.Mvc;
 
 namespace GroupDocs.Annotation_for.NET.Controllers
@@ -21,7 +12,18 @@ namespace GroupDocs.Annotation_for.NET.Controllers
         public ActionResult Get(string file)
         {
             Response.AddHeader("Content-Type", "application/json");
-            return Content("[\"Test - Copy.pdf\"]");
+            DirectoryInfo d = new DirectoryInfo(this.Server.MapPath("~/App_Data/Storage"));
+            ArrayList result = new ArrayList();
+            foreach (FileInfo f in d.GetFiles())
+            {
+                if (f.Name == "README.txt" || f.Name.StartsWith("GroupDocs.") || f.Name.StartsWith("."))
+                {
+                    continue;
+                }
+                result.Add(f.Name);
+            }
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
     }
 }
+
