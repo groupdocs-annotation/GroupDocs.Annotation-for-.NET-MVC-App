@@ -9,6 +9,7 @@ using System.IO;
 using System.Configuration;
 using GroupDocs.Annotation.Handler.Input.DataObjects;
 using GroupDocs.Annotation.Handler.Input;
+using System.Runtime.CompilerServices;
 
 namespace GroupDocs.Annotation_for.NET.Models
 {
@@ -28,6 +29,7 @@ namespace GroupDocs.Annotation_for.NET.Models
             return AppDomain.CurrentDomain.GetData("DataDirectory") + ConfigurationManager.AppSettings["StoragePath"];
         }
 
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public static Document findDocumentByName(string filename)
         {
             AnnotationImageHandler imageHandler = Utils.createAnnotationImageHandler();
@@ -40,9 +42,9 @@ namespace GroupDocs.Annotation_for.NET.Models
 
             long documentId = imageHandler.CreateDocument(filename);
 
-            using (FileStream original = new FileStream(Utils.getStoragePath() + "/" + filename,FileMode.Create)) {
-                imageHandler.ImportAnnotations(original, documentId);
-            } 
+//            using (FileStream original = new FileStream(Utils.getStoragePath() + "/" + filename,FileMode.Create)) {
+//                imageHandler.ImportAnnotations(original, documentId);
+//            } 
             return documentDataHandler.Get(documentId);
         }
     }

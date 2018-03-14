@@ -26,7 +26,7 @@ namespace GroupDocs.Annotation_for.NET.Controllers
 
             Stream exported;
             using (FileStream original = new FileStream(Utils.getStoragePath() + "/" + filename,FileMode.Open)) {
-                exported = imageHandler.ExportAnnotationsToDocument(original, list, document.DocumentType);
+                exported = imageHandler.ExportAnnotationsToDocument(original, list);
             }
 
             Response.AddHeader("Content-Type", "application/octet-stream");
