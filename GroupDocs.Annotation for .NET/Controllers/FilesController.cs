@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Collections;
 using System.Web.Mvc;
+using GroupDocs.Annotation_for.NET.Models;
 
 namespace GroupDocs.Annotation_for.NET.Controllers
 {
@@ -12,7 +13,7 @@ namespace GroupDocs.Annotation_for.NET.Controllers
         public ActionResult Get(string file)
         {
             Response.AddHeader("Content-Type", "application/json");
-            DirectoryInfo d = new DirectoryInfo(this.Server.MapPath("~/App_Data/Storage"));
+            DirectoryInfo d = new DirectoryInfo(Utils.getStoragePath());
             ArrayList result = new ArrayList();
             foreach (FileInfo f in d.GetFiles())
             {
