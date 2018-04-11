@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/angular-loading-bar/0.9.0/loading-bar.min.css">
     <link rel='stylesheet' href="//fonts.googleapis.com/icon?family=Material+Icons|Roboto+Condensed:400,700">
 
-    <link rel='stylesheet' href="css/style.css">
+    <link rel='stylesheet' href="/css/style.css">
 
     <script src="//code.jquery.com/jquery-latest.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
@@ -20,18 +20,18 @@
     <script src="//ajax.googleapis.com/ajax/libs/angular_material/1.1.4/angular-material.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/paper.js/0.11.4/paper-full.min.js"></script>
 
-    <script src="js/app.js"></script>
-    <script src="js/app.factory.files.js"></script>
-    <script src="js/app.components.js"></script>
-    <script src="js/app.factory.annotation.js"></script>
-    <script src="js/app.factory.replies.js"></script>
-    <script src="js/app.factory.reply.js"></script>
-    <script src="js/app.directive.gdxAnnoPage.js"></script>
-    <script src="js/app.controller.pageCanvas.js"></script>
-    <script src="js/app.controller.thread.js"></script>
-    <script src="js/app.controller.tools.js"></script>
-    <script src="js/app.config.js"></script>
-    <script src="js/app.run.js"></script>
+    <script src="/js/app.js"></script>
+    <script src="/js/app.factory.files.js"></script>
+    <script src="/js/app.components.js"></script>
+    <script src="/js/app.factory.annotation.js"></script>
+    <script src="/js/app.factory.replies.js"></script>
+    <script src="/js/app.factory.reply.js"></script>
+    <script src="/js/app.directive.gdxAnnoPage.js"></script>
+    <script src="/js/app.controller.pageCanvas.js"></script>
+    <script src="/js/app.controller.thread.js"></script>
+    <script src="/js/app.controller.tools.js"></script>
+    <script src="/js/app.config.js"></script>
+    <script src="/js/app.run.js"></script>
 </head>
 <body ng-cloak>
 
@@ -54,7 +54,7 @@
             <md-icon>more_vert</md-icon>
         </md-button>
     </md-toolbar>
-    <md-content flex layout="row">
+    <md-content flex layout="row" style="min-height:100%">
         <div layout="column" ng-controller="ToolsController">
             <div flex layout="column" layout-align="start center">
                 <md-button class="md-icon-button" aria-label="Select" ng-click="selectSelectTool()">
@@ -127,8 +127,8 @@
                                 </md-card-header>
                                 <md-card-content>
                                     <md-input-container>
-                                        <label ng-show="!selectedAnnotation.fieldText">Comments...</label>
-                                        <textarea ng-model="selectedAnnotation.fieldText" ng-change="selectedAnnotation.unsaved=true"
+                                        <label ng-show="!selectedAnnotation.replies[0].message">Comments...</label>
+                                        <textarea ng-model="selectedAnnotation.replies[0].message" ng-change="selectedAnnotation.unsaved=true"
                                                   aria-label="Comments">
                                     </textarea>
                                     </md-input-container>
@@ -139,7 +139,7 @@
                                         <md-icon>reply</md-icon>
                                     </md-button>
                                     <md-button class="md-icon-button" aria-label="Save" ng-show="selectedAnnotation.unsaved"
-                                               ng-click="saveAnnotationFieldText(selectedAnnotation)">
+                                               ng-click="saveAnnotationComment(selectedAnnotation)">
                                         <md-icon>save</md-icon>
                                     </md-button>
                                     <md-button class="md-icon-button" aria-label="Delete"
@@ -148,7 +148,7 @@
                                     </md-button>
                                 </md-card-actions>
                             </md-card>
-                            <md-card ng-repeat="reply in selectedAnnotation.replies">
+                            <md-card ng-repeat="reply in selectedAnnotation.replies" ng-hide="$first">
                                 <md-card-header>
                                     <md-card-avatar>
                                         <md-icon>person</md-icon>
