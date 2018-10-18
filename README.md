@@ -1,3 +1,8 @@
+![Outdated](http://alexbobkov.com/resources/image/outdated.png)
+  
+This repository is outdated, instead please use following repository:  
+https://github.com/groupdocs-annotation/GroupDocs.Annotation-for-.NET-MVC
+
 # GroupDocs.Annotation for .NET using Controllers
 
 This application allows user to view and annotate a document in a web browser. Users can view document pages in image form and draw annotations on it. The annotated file can be downloaded later.
